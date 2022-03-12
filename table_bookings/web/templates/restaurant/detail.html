@@ -1,0 +1,91 @@
+{% extends "common.html" %}
+{% load static %}
+{% load humanize %}
+{% load cache %}
+
+{% block title %}테이블 부킹{% endblock %}
+
+{% block content %}
+<section class="mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="pro-d-title">
+                {{ restaurant.name }}
+            </h4>
+            <p>
+                {{ restaurant.description }}
+            </p>
+
+            <div class="col-md-12 p-0 border border-dark bg-light" style="font-size:10px;">
+                <div class="row">
+                    {% for slot in slots %}
+                        {# 5로 나누어 떨어지는지 #}
+                        {% if forloop.counter0|divisibleby:"5" %}
+                            </div><div class="row">
+                        {% endif %}
+                        <div class="col text-center">
+                            <h6 class="p-2" style="font-size:10px">{{ slot.day|date:"m월 d일" }}</h6>
+                            <table class="table table-hover">
+                                {% for time in slot.times %}
+                                <tr>
+                                    <td>
+{#                                        {% if user.is_authenticated %}<a href="{% url 'restaurant-booking' time.restaurant_id time.seat_id %}">{% endif %}#}
+                                        {{ time.time|time:"H:i" }}<br>
+                                        {{ time.price|floatformat:0|intcomma }}<br>
+                                        ({{ time.available }})
+{#                                        ({{ time.remain }} / {{ time.total }})#}
+{#                                        {% if user.is_authenticated %}</a>{% endif %}#}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td>휴무</td></tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="col-md-12">
+                <img src="{{ restaurant.main_image.image }}" class="img-fluid" style="width: 100%;">
+            </div>
+            <div class="col-md-12 mt-2">
+                {% for image in images %}
+                    <img src="{{ image.image }}" alt="" style="width: 20%;">
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{##}
+{#<section class="mt-4">#}
+{#    <div class="row">#}
+{#        <div class="col-12 list-group">#}
+{#            <h6>후기#}
+{#                {% if ratings.ratings__avg %}#}
+{#                | {{ ratings.ratings__avg }}#}
+{#                {% endif %}#}
+{#            </h6>#}
+{#            {% cache 60 detail-reviews restaurant.id %}#}
+{#            <div class="list-group">#}
+{#                {% if reviews %}#}
+{#                    {% for review in reviews %}#}
+{#                    <div class="list-group-item list-group-item-action">#}
+{#                        평점: {{ review.ratings }}<br>#}
+{#                        {{ review.comment }}#}
+{#                    </div>#}
+{#                    {% endfor %}#}
+{#                {% else %}#}
+{#                <div class="list-group-item list-group-item-action">#}
+{#                    후기가 없습니다.#}
+{#                </div>#}
+{#                {% endif %}#}
+{#            </div>#}
+{#            {% endcache %}#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#</section>#}
+{% endblock %}
