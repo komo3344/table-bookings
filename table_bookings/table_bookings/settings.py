@@ -179,7 +179,7 @@ AWS_SES_REGION_NAME = 'ap-northeast-2'
 AWS_SES_REGION_ENDPOINT = 'email.ap-northeast-2.amazonaws.com'
 
 # All auth
-SITE_ID = 2
+SITE_ID = 3
 LOGIN_REDIRECT_URL = 'index'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'index'
 ACCOUNT_LOGOUT_ON_GET = True

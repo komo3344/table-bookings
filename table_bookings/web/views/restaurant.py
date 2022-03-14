@@ -15,6 +15,38 @@ from ..models import Restaurant, RestaurantTable, RestaurantImage, AvailableSeat
 from ..utils import convert_weekday
 
 
+@transaction.atomic
+def fetch_remain_and_return_expired_booking(slot_day: date, time: RestaurantTable):
+    seat_datetime = timezone.datetime.combine(slot_day, time.time)
+    seat, created = AvailableSeat.objects.get_or_create(
+        restaurant=time.restaurant,
+        table=time,
+        datetime=seat_datetime,
+        defaults={
+            'remain': time.available,
+
+        }
+    )
+
+    if not created:
+        created_time = datetime.datetime.now() - datetime.timedelta(minutes=10)
+        if __name__ == '__main__':
+            expired_count = Booking.objects.filter(seat=seat).\
+                filter(status=Booking.PayMethod.READY, created_at__lt=created_time).\
+                update(status=Booking.PayMethod.FAILED)
+            seat.remain = seat.remain = expired_count
+            seat.save()
+
+    return {
+        'restaurant_id': time.restaurant.id,
+        'seat_id': seat.id,
+        'time': time.time,
+        'price': time.price,
+        'total': time.available,
+        'remain': seat.remain
+    }
+
+
 class RestaurantView(TemplateView):
     template_name = 'restaurant/detail.html'
 
@@ -33,15 +65,14 @@ class RestaurantView(TemplateView):
             times = [table for table in tables if table.weekday == week_value]
 
             seats = []
-            # for time in times:
-            #     seat = fetch_remain_and_return_expired_booking(slot_day, time)
-            #     seats.append(seat)
+            for time in times:
+                seat = fetch_remain_and_return_expired_booking(slot_day, time)
+                seats.append(seat)
 
             slots.append(
                 {
                     'day': slot_day,
-                    # 'times': seats
-                    'times': times
+                    'times': seats
                 }
             )
 
@@ -79,7 +110,7 @@ class BookingView(LoginRequiredMixin, TemplateView):
                 table=seat.table,
                 defaults={
                     'price': seat.table.price,
-                    'order_number:': new_order_number
+                    'order_number': new_order_number
                 }
             )
 
