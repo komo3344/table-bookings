@@ -19,7 +19,6 @@
             <div class="col-md-12 p-0 border border-dark bg-light" style="font-size:10px;">
                 <div class="row">
                     {% for slot in slots %}
-                        {# 5로 나누어 떨어지는지 #}
                         {% if forloop.counter0|divisibleby:"5" %}
                             </div><div class="row">
                         {% endif %}
@@ -32,7 +31,6 @@
                                         {% if user.is_authenticated %}<a href="{% url 'restaurant-booking' time.restaurant_id time.seat_id %}">{% endif %}
                                         {{ time.time|time:"H:i" }}<br>
                                         {{ time.price|floatformat:0|intcomma }}<br>
-                                        ({{ time.available }})
                                         ({{ time.remain }} / {{ time.total }})
                                         {% if user.is_authenticated %}</a>{% endif %}
                                     </td>
@@ -59,7 +57,7 @@
         </div>
     </div>
 </section>
-{##}
+
 {#<section class="mt-4">#}
 {#    <div class="row">#}
 {#        <div class="col-12 list-group">#}
