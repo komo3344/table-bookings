@@ -1,5 +1,11 @@
+import uuid
+
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
 
@@ -118,3 +124,25 @@ class PayHistory(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
+
+
+class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
+    def populate_user(self, request, sociallogin, data):
+        user = super().populate_user(request, sociallogin, data)
+        user.username = user.email[:30]
+        if User.objects.filter(username=user.username).exists():
+            user.username = str(uuid.uuid4())
+        return user
+
+
+@receiver(post_save, sender=User)
+def on_save_user(sender, instance, **kwargs):
+    profile = UserProfile.objects.filter(user=instance).first()
+    social_account = SocialAccount.objects.filter(user=instance).first()
+    if profile is None and social_account is not None:
+        nickname = instance.email.split('@')[0]
+        UserProfile.objects.create(
+            user=instance,
+            nickname=nickname,
+            profile_image=None
+        )
