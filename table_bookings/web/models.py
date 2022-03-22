@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nickname = models.CharField(max_length=20)
+    nickname = models.CharField(max_length=30)
     profile_image = models.ImageField(upload_to='uploads/%Y/%m/%d/', null=True)
 
 

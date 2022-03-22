@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from table_bookings.web.models import UserProfile
+from web.models import UserProfile
 
 
 class RegisterForm(forms.Form):

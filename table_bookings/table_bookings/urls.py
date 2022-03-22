@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from web.views.main import IndexView, SearchView, SearchJsonView
-from web.views.users import RegisterView, LoginView, LogoutView, VerificationView
+from web.views.users import RegisterView, LoginView, LogoutView, VerificationView, ProfileView, PasswordView
 from web.views.restaurant import RestaurantView, BookingView, RestaurantPayView
 
 urlpatterns = [
@@ -26,6 +26,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('verify/', VerificationView.as_view(), name='verification'),
+    path('profile/', ProfileView.as_view(), name='profile'),
+    path('password/', PasswordView.as_view(), name='password'),
 
     path('search/', SearchView.as_view(), name='search'),
     path('search/json/', SearchJsonView.as_view(), name='search-json'),

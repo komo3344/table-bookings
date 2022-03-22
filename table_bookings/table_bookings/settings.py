@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.kakao',
     'corsheaders',
+    'crispy_forms',
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -198,6 +199,11 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+SOCIALACCOUNT_ADAPTER = 'web.models.CustomSocialAccountAdapter'
+ACCOUNT_UNIQUE_EMAIL = False
+
+# cripsy
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # 794778118250-d4ok6oesrasg9cbl7dis6n9oaf13trpi.apps.googleusercontent.com
 # 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
 

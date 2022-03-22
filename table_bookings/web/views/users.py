@@ -1,6 +1,9 @@
 from datetime import timedelta
 
+from allauth.socialaccount.models import SocialAccount
 from django.contrib import auth, messages
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import redirect
@@ -8,9 +11,9 @@ from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views import View
-from django.views.generic import FormView
+from django.views.generic import FormView, UpdateView
 
-from ..forms import RegisterForm, LoginForm
+from ..forms import RegisterForm, LoginForm, PasswordForm, ProfileForm
 from ..models import UserProfile, UserVerification
 from ..utils import create_email_key
 
@@ -95,3 +98,48 @@ class VerificationView(View):
             messages.warning(self.request, '인증을 다시 시도해주세요.')
 
         return redirect(reverse('index'))
+
+
+class ProfileView(LoginRequiredMixin, UpdateView):
+    form_class = ProfileForm
+    template_name = 'users/profile.html'
+    success_url = reverse_lazy('profile')
+    login_url = reverse_lazy('login')
+
+    def get_object(self, queryset=None):
+        # try:
+        #     UserProfile.objects.get(pk=200)
+        # except:
+        #     raise Http404
+
+        return UserProfile.objects.get(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        social_account = SocialAccount.objects.filter(user=self.request.user).first()
+        context['is_social_login'] = social_account is not None
+        return context
+
+
+class PasswordView(LoginRequiredMixin, FormView):
+    template_name = 'users/password.html'
+    form_class = PasswordForm
+    success_url = reverse_lazy('profile')
+    login_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        old_password = form.cleaned_data.get('old_password')
+        password = form.cleaned_data.get('new_password')
+        password_confirm = form.cleaned_data.get('confirm_password')
+
+        if password != password_confirm:
+            messages.warning(self.request, "2개의 비밀번호가 일치하지 않습니다.")
+            return redirect(reverse('password'))
+        elif not check_password(old_password, self.request.user.password):
+            messages.warning(self.request, "기존 비밀번호가 일치하지 않습니다.")
+            return redirect(reverse('password'))
+        else:
+            messages.warning(self.request, "비밀번호가 수정되었습니다.")
+            self.request.user.set_password(password)
+            self.request.user.save()
+            return super().form_valid(form)
