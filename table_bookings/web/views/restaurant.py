@@ -7,12 +7,13 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
+from django.db.models import Avg
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.utils import timezone
-from ..models import Restaurant, RestaurantTable, RestaurantImage, AvailableSeat, Booking
+from ..models import Restaurant, RestaurantTable, RestaurantImage, AvailableSeat, Booking, Review, PayHistory
 from ..utils import convert_weekday
 
 
@@ -55,6 +56,8 @@ class RestaurantView(TemplateView):
         restaurant = get_object_or_404(Restaurant, id=restaurant_id)
         images = RestaurantImage.objects.filter(restaurant=restaurant)
         tables = list(RestaurantTable.objects.filter(restaurant=restaurant))
+        reviews = Review.objects.filter(restaurant=restaurant).order_by('-created_at')[:20]
+        ratings = Review.objects.filter(restaurant=restaurant).aggregate(Avg('ratings'))
 
         slots = []
         span_days = 10
@@ -81,8 +84,8 @@ class RestaurantView(TemplateView):
             'restaurant': restaurant,
             'images': images,
             'slots': slots,
-            # 'reviews': reviews,
-            # 'ratings': ratings
+            'reviews': reviews,
+            'ratings': ratings
         }
 
 
@@ -176,7 +179,7 @@ class RestaurantPayView(LoginRequiredMixin, TemplateView):
                 if response.ok:
                     booking.status = Booking.PayStatus.PAID
                     booking.paid_at = timezone.now()
-                    # PayHistory.objects.create(booking=booking, amount=booking.price)
+                    PayHistory.objects.create(booking=booking, amount=booking.price)
                 else:
                     booking.status = Booking.PayStatus.FAILED
                 booking.save()

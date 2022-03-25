@@ -42,7 +42,7 @@ class ReviewUpdateView(LoginRequiredMixin, UpdateView):
     pk_url_kwarg = 'review_id'
     fields = ['comment', 'ratings']
     template_name = 'review/update.html'
-    success_url = reverse_lazy('review-history')
+    success_url = reverse_lazy('history')
     login_url = reverse_lazy('login')
 
     def form_valid(self, form):
