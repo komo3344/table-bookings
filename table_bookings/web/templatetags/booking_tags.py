@@ -19,7 +19,7 @@ def convert_status_korean(status: Booking.PayStatus):
     return ""
 
 
-# @register.filter(name='is_available_review')
-# def is_available_review(booking: Booking):
-#     now = timezone.now()
-#     return booking.status == Booking.PayStatus.PAID and booking.seat.datetime < now and booking.review is None
+@register.filter(name='is_available_review')
+def is_available_review(booking: Booking):
+    now = timezone.now()
+    return booking.status == Booking.PayStatus.PAID and booking.seat.datetime < now and booking.review is None
