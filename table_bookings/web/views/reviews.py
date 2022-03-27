@@ -27,7 +27,6 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
             raise PermissionDenied()
 
         data = form.save(commit=False)
-        print("review form_vaild form data: ", data)
         data.user = self.request.user
         data.restaurant = booking.restaurant
         data.save()
@@ -42,7 +41,7 @@ class ReviewUpdateView(LoginRequiredMixin, UpdateView):
     pk_url_kwarg = 'review_id'
     fields = ['comment', 'ratings']
     template_name = 'review/update.html'
-    success_url = reverse_lazy('history')
+    success_url = reverse_lazy('review-history')
     login_url = reverse_lazy('login')
 
     def form_valid(self, form):
