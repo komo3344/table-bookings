@@ -13,7 +13,7 @@ from ..models import Booking, PayHistory
 
 class BookingHistoryView(LoginRequiredMixin, ListView):
     model = Booking
-    template_name = 'history/list.html'
+    template_name = 'booking/list.html'
     paginate_by = 5
 
     def get_queryset(self):
@@ -31,7 +31,7 @@ class BookingCancelView(View):
 
         if booking.status != booking.PayStatus.PAID:
             messages.warning(request, '취소할 수 없는 예약입니다.')
-            return redirect('history')
+            return redirect('booking-history')
 
         response = requests.post('https://api.tosspayments.com/v1/payments/'
                                  + booking.pg_transaction_number + '/cancel',
@@ -50,4 +50,4 @@ class BookingCancelView(View):
                 booking.seat.save()
                 PayHistory.objects.create(booking=booking, amount=-booking.price)
 
-        return redirect('history')
+        return redirect('booking-history')

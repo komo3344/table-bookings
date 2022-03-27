@@ -1,18 +1,25 @@
+from django.db.models import Avg
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import TemplateView
 
 from .service.search import RestaurantSearch
-from ..models import Recommendation
+from ..models import Recommendation, Restaurant
 
 
 class IndexView(TemplateView):
     template_name = 'main/index.html'
 
     def get_context_data(self, **kwargs):
-        recommendations = Recommendation.objects.select_related('restaurant').filter(visible=True).order_by('sort')[:4]
+        recommendations = Recommendation.objects.filter(visible=True).order_by('sort') \
+                              .select_related('restaurant').all()[:4]
+        latest = Restaurant.objects.order_by('-created_at')[:4]
+        hottest = Restaurant.objects.annotate(average_ratings=Avg('review__ratings')) \
+                      .filter(average_ratings__gte=0).order_by('-average_ratings')[:4]
         return {
-            'recommendation': recommendations
+            'recommendation': recommendations,
+            'latest': latest,
+            'hottest': hottest
         }
 
 
