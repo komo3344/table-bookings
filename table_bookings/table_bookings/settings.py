@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     # LOCAL APPS
     'web',
+    'office',
     # THIRD PARTY APPS
     'allauth',
     'allauth.account',
