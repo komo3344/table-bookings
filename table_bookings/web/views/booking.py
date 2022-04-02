@@ -2,6 +2,7 @@ import requests
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView
@@ -15,6 +16,7 @@ class BookingHistoryView(LoginRequiredMixin, ListView):
     model = Booking
     template_name = 'booking/list.html'
     paginate_by = 5
+    login_url = reverse_lazy('login')
 
     def get_queryset(self):
         return Booking.objects.filter(user=self.request.user)\
@@ -22,7 +24,9 @@ class BookingHistoryView(LoginRequiredMixin, ListView):
             .exclude(status=Booking.PayStatus.READY)
 
 
-class BookingCancelView(View):
+class BookingCancelView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
     def get(self, request, booking_id):
         booking = get_object_or_404(Booking, pk=booking_id)
 
