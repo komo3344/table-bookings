@@ -205,9 +205,16 @@ ACCOUNT_UNIQUE_EMAIL = False
 
 # cripsy
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-# 794778118250-d4ok6oesrasg9cbl7dis6n9oaf13trpi.apps.googleusercontent.com
-# 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
 
-# 4d5dbdef34fbf1e9c15c961386641f8f
+# session
+SESSION_ENGINE = 'redis_sessions.session'
+SESSION_REDIS = {
+    'host': '',  # aws redis server 주소
+    'port': 6379,
+    'db': 0,
+    'prefix': 'session',
+    'socket_timeout': 1,    # 1초
+    'retry_on_timeout': False,
+    'password ': ''
 
-# Rc73teroUMrQCf8nkluy0mwTNQ4wiewO
+}
