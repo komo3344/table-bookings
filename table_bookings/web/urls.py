@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from .views.booking import BookingHistoryView, BookingCancelView
 from .views.main import SearchView, SearchJsonView, IndexView
@@ -8,7 +9,8 @@ from .views.users import RegisterView, LoginView, LogoutView, VerificationView, 
 
 urlpatterns = [
     # main
-    path('', IndexView.as_view(), name='index'),
+    # path('', cache_page(60 * 15)(IndexView.as_view()), name='index'),   # 15분 캐시 설정 (로그아웃을 해도 캐시가 되어 있어 페이지가 그대로임)
+    path('', IndexView.as_view(), name='index'),   # 15분 캐시 설정
 
     # user
     path('register/', RegisterView.as_view(), name='register'),

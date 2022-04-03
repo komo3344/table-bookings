@@ -218,3 +218,11 @@ SESSION_REDIS = {
     'password ': ''
 
 }
+
+# cache django 4.0
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://:{password}@{ip}:{port}'
+    }
+}
