@@ -123,7 +123,10 @@ DATABASES = {
         'PORT': 3306,
         'NAME': 'tablebooking',
         'USER': 'root',
-        'PASSWORD': 'root'
+        'PASSWORD': 'root',
+        'TEST': {
+            'NAME': 'tablebooking_test'
+        }
     }
 }
 
@@ -208,25 +211,25 @@ ACCOUNT_UNIQUE_EMAIL = False
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # session
-SESSION_ENGINE = 'redis_sessions.session'
-SESSION_REDIS = {
-    'host': '',  # aws redis server 주소
-    'port': 6379,
-    'db': 0,
-    'prefix': 'session',
-    'socket_timeout': 1,    # 1초
-    'retry_on_timeout': False,
-    'password ': ''
-
-}
+# SESSION_ENGINE = 'redis_sessions.session'
+# SESSION_REDIS = {
+#     'host': '',  # aws redis server 주소
+#     'port': 6379,
+#     'db': 0,
+#     'prefix': 'session',
+#     'socket_timeout': 1,    # 1초
+#     'retry_on_timeout': False,
+#     'password ': ''
+#
+# }
 
 # cache django 4.0
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://:{password}@{ip}:{port}'
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+#         'LOCATION': 'redis://:{password}@{ip}:{port}'
+#     }
+# }
 
 # logging
 # LOGGING = {
