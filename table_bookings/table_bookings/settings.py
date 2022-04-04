@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8#0s5wznjd3cf1$011l^e_w00h!x(!^6esua)g1p48d0d279)^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -85,6 +85,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    # 'table_bookings.middleware.ExceptionMiddleware'
 ]
 
 AUTHENTICATION_BACKEND = [
@@ -226,3 +227,51 @@ CACHES = {
         'LOCATION': 'redis://:{password}@{ip}:{port}'
     }
 }
+
+# logging
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#
+#     # Formatter
+#     'formatters': {
+#         'basic_format': {
+#             'format': '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s',
+#             'datefmt': '%d/%b/%Y %H:%M:%S'
+#         },
+#     },
+#
+#     # Handler
+#     'handlers': {
+#         # 파일 출력
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': '../logs/app.log',
+#             'maxBytes': 1024*1024*15,  # 15MB
+#             'backupCount': 10,
+#             'formatter': 'basic_format',
+#         },
+#         # 콘솔 출력
+#         'console': {
+#             'level': 'INFO',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'basic_format',
+#         }
+#     },
+#
+#     # 로거
+#     'loggers': {
+#         # 웹 앱에 대해 출력
+#         'web': {
+#             'handlers': ['console', 'file'],
+#             'level': 'INFO',
+#         },
+#         # 요청 출력
+#         'django.request': {
+#             'handlers': ['console', 'file'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#     },
+# }
