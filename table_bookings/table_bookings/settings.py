@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8#0s5wznjd3cf1$011l^e_w00h!x(!^6esua)g1p48d0d279)^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
     'corsheaders',
     'crispy_forms',
+    'storages'
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -165,7 +166,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+AWS_STORAGE_BUCKET_NAME = 'table-bookings'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400'
+}
+AWS_DEFAULT_ACL = 'public-read'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+STATIC_URL = 'https://%s/static/' % AWS_S3_CUSTOM_DOMAIN
+
 STATICFILES_DIR = [
     BASE_DIR / 'static',
 ]

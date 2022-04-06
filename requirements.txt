@@ -12,6 +12,7 @@ django-allauth==0.49.0
 django-cors-headers==3.11.0
 django-crispy-forms==1.14.0
 django-ses==2.6.0
+django-storages==1.12.3
 future==0.18.2
 idna==3.3
 jmespath==0.10.0

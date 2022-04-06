@@ -24,6 +24,7 @@ class RestaurantCreateView(PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         data = form.save(commit=False)
+        data.save()
 
         image_data = self.request.FILES.get('main_image')
         if image_data:
@@ -33,8 +34,7 @@ class RestaurantCreateView(PermissionRequiredMixin, CreateView):
             )
             image.save()
             data.main_image = image
-
-        data.save()
+            data.save()
 
         return super().form_valid(form)
 
@@ -55,6 +55,7 @@ class RestaurantUpdateView(PermissionRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         data = form.save(commit=False)
+        data.save()
 
         image_data = self.request.FILES.get('main_image')
         if image_data:
@@ -64,8 +65,7 @@ class RestaurantUpdateView(PermissionRequiredMixin, UpdateView):
             )
             image.save()
             data.main_image = image
-
-        data.save()
+            data.save()
 
         return super().form_valid(form)
 
