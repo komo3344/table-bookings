@@ -23,5 +23,6 @@ urlpatterns = [
     path('', include('web.urls')),
     path('office/', include('office.urls')),
     path('admin/', admin.site.urls),
-    path('oauth/', include('allauth.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('oauth/', include('allauth.urls')),
+    path('prometheus/', include('django_prometheus.urls'))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)   # s3로 설정이 되었다면 없어져도 됨 media로 서빙할 필요 없음

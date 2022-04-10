@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
     'corsheaders',
     'crispy_forms',
-    'storages'
+    'storages',
+    'django_prometheus',
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -78,6 +79,7 @@ CORS_ALLOW_HEADERS = [
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',  # 맨 위에
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -86,6 +88,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'request_logging.middleware.LoggingMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',  # 맨 아래
     # 'table_bookings.middleware.ExceptionMiddleware'
 ]
 
@@ -242,49 +246,49 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # }
 
 # logging
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#
-#     # Formatter
-#     'formatters': {
-#         'basic_format': {
-#             'format': '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s',
-#             'datefmt': '%d/%b/%Y %H:%M:%S'
-#         },
-#     },
-#
-#     # Handler
-#     'handlers': {
-#         # 파일 출력
-#         'file': {
-#             'level': 'DEBUG',
-#             'class': 'logging.handlers.RotatingFileHandler',
-#             'filename': '../logs/app.log',
-#             'maxBytes': 1024*1024*15,  # 15MB
-#             'backupCount': 10,
-#             'formatter': 'basic_format',
-#         },
-#         # 콘솔 출력
-#         'console': {
-#             'level': 'INFO',
-#             'class': 'logging.StreamHandler',
-#             'formatter': 'basic_format',
-#         }
-#     },
-#
-#     # 로거
-#     'loggers': {
-#         # 웹 앱에 대해 출력
-#         'web': {
-#             'handlers': ['console', 'file'],
-#             'level': 'INFO',
-#         },
-#         # 요청 출력
-#         'django.request': {
-#             'handlers': ['console', 'file'],
-#             'level': 'INFO',
-#             'propagate': False,
-#         },
-#     },
-# }
+LOGGING = {
+    'version': 1,   # 로깅 버전
+    'disable_existing_loggers': False,  # 기존 장고 로거 설정을 덮어씌움
+
+    # Formatter 어떤 형식으로 출력할지 정의
+    'formatters': {
+        'basic_format': {
+            'format': '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s',
+            'datefmt': '%d/%b/%Y %H:%M:%S'
+        },
+    },
+
+    # Handler
+    'handlers': {
+        # 파일 출력
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '../logs/app.log',
+            'maxBytes': 1024*1024*15,  # 15MB
+            'backupCount': 10,
+            'formatter': 'basic_format',
+        },
+        # 콘솔 출력
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'basic_format',
+        }
+    },
+
+    # 로거
+    'loggers': {
+        # 웹 앱에 대해 출력
+        'web': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
+        # 요청 출력
+        'django.request': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}

@@ -1,3 +1,5 @@
+import logging
+
 from django.db.models import Avg
 from django.http import JsonResponse
 from django.views import View
@@ -5,6 +7,8 @@ from django.views.generic import TemplateView
 
 from .service.search import RestaurantSearch
 from ..models import Recommendation, Restaurant
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(TemplateView):
@@ -16,6 +20,9 @@ class IndexView(TemplateView):
         latest = Restaurant.objects.order_by('-created_at')[:4]
         hottest = Restaurant.objects.annotate(average_ratings=Avg('review__ratings')) \
                       .filter(average_ratings__gte=0).order_by('-average_ratings')[:4]
+
+        logger.info('recommendations: %d', len(recommendations))
+
         return {
             'recommendation': recommendations,
             'latest': latest,
