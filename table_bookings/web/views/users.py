@@ -90,9 +90,8 @@ class VerificationView(View):
             verification.save()
 
             user = verification.user
-            user.verification = True
+            user.userprofile.verification = True
             user.save()
-
             messages.success(self.request, '인증이 완료되었습니다.')
         else:
             messages.warning(self.request, '인증을 다시 시도해주세요.')
