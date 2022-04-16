@@ -225,25 +225,24 @@ ACCOUNT_UNIQUE_EMAIL = False
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # session
-# SESSION_ENGINE = 'redis_sessions.session'
-# SESSION_REDIS = {
-#     'host': '',  # aws redis server 주소
-#     'port': 6379,
-#     'db': 0,
-#     'prefix': 'session',
-#     'socket_timeout': 1,    # 1초
-#     'retry_on_timeout': False,
-#     'password ': ''
-#
-# }
+SESSION_ENGINE = 'redis_sessions.session'
+SESSION_REDIS = {
+    'host': '13.209.66.105',  # aws redis server 주소
+    'port': 6379,
+    'db': 0,
+    'prefix': 'session',
+    'socket_timeout': 1,    # 1초 이상 지연이 되면 연결을 끊음 (메모리는 속도가 빠르기 때문에 1초도 충분)
+    'retry_on_timeout': False,
+    'password': 'P@ssw0rd!**'  # 레디스에서 세팅한 비밀번호   # TODO 중요설정은 숨김처리필요
+}
 
 # cache django 4.0
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-#         'LOCATION': 'redis://:{password}@{ip}:{port}'
-#     }
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://:P@ssw0rd!**@13.209.66.105:6379'
+    }
+}
 
 # logging
 LOGGING = {
